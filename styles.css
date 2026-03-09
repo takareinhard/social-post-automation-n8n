@@ -1,0 +1,162 @@
+:root {
+  color-scheme: light;
+  font-family: Arial, sans-serif;
+  background: #f4f4f4;
+  color: #1c1c1c;
+  --board-size: min(78vw, 480px);
+  --cell-gap: 2px;
+  --cell-bg: #e0e0e0;
+  --snake-bg: #2f6f3e;
+  --snake-head-bg: #214f2d;
+  --food-bg: #c64242;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+}
+
+.app {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+.panel {
+  width: min(100%, 560px);
+  background: #ffffff;
+  border: 1px solid #d3d3d3;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+}
+
+.panel__header,
+.actions,
+.stats,
+.controls,
+.controls__row {
+  display: flex;
+}
+
+.panel__header,
+.actions {
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.stats {
+  gap: 16px;
+  align-items: flex-start;
+  flex-direction: column;
+  font-size: 0.95rem;
+}
+
+h1,
+p {
+  margin: 0;
+}
+
+.subtitle,
+.hint {
+  color: #5f5f5f;
+}
+
+.actions {
+  margin-top: 16px;
+}
+
+button {
+  appearance: none;
+  border: 1px solid #bdbdbd;
+  background: #fafafa;
+  color: inherit;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font: inherit;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #f0f0f0;
+}
+
+.board-wrap {
+  margin-top: 18px;
+  display: grid;
+  place-items: center;
+}
+
+.board {
+  width: var(--board-size);
+  aspect-ratio: 1;
+  display: grid;
+  grid-template-columns: repeat(16, 1fr);
+  grid-template-rows: repeat(16, 1fr);
+  gap: var(--cell-gap);
+  padding: var(--cell-gap);
+  background: #cccccc;
+  border-radius: 10px;
+  touch-action: none;
+}
+
+.cell {
+  background: var(--cell-bg);
+  border-radius: 3px;
+}
+
+.cell--snake {
+  background: var(--snake-bg);
+}
+
+.cell--head {
+  background: var(--snake-head-bg);
+}
+
+.cell--food {
+  background: var(--food-bg);
+}
+
+.controls {
+  margin-top: 18px;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.controls__row {
+  gap: 8px;
+}
+
+.hint {
+  margin-top: 16px;
+  font-size: 0.95rem;
+}
+
+@media (max-width: 560px) {
+  .panel {
+    padding: 16px;
+  }
+
+  .stats {
+    flex-direction: row;
+    gap: 12px;
+  }
+
+  .actions,
+  .controls__row {
+    width: 100%;
+  }
+
+  .actions button,
+  .controls button,
+  .controls__row button {
+    flex: 1;
+  }
+}
