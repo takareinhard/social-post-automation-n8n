@@ -1,0 +1,204 @@
+{
+    "name":  "ディスコードでアニメ画像生成",
+    "nodes":  [
+                  {
+                      "parameters":  {
+                                         "conditions":  {
+                                                            "string":  [
+                                                                           {
+                                                                               "value1":  "={{ $json.content }}",
+                                                                               "operation":  "startsWith",
+                                                                               "value2":  "!anime"
+                                                                           }
+                                                                       ]
+                                                        }
+                                     },
+                      "id":  "REDACTED_NODE_ID",
+                      "name":  "コマンド判定 (!anime)",
+                      "type":  "n8n-nodes-base.if",
+                      "typeVersion":  1,
+                      "position":  [
+                                       -784,
+                                       -128
+                                   ]
+                  },
+                  {
+                      "parameters":  {
+                                         "jsCode":  "const rawPrompt = $input.item.json.content.replace(\u0027!anime\u0027, \u0027\u0027).trim();\n// ↓ここをLoRAのトリガーワードに合わせて書き換えます\nconst magicPrompt = \u0027, anime niji style, masterpiece, best quality\u0027;\nreturn { json: { \n  finalPrompt: rawPrompt + magicPrompt, \n  channelId: $input.item.json.channelId\n} };"
+                                     },
+                      "id":  "REDACTED_NODE_ID",
+                      "name":  "魔法のプロンプト付与",
+                      "type":  "n8n-nodes-base.code",
+                      "typeVersion":  2,
+                      "position":  [
+                                       -560,
+                                       -144
+                                   ]
+                  },
+                  {
+                      "parameters":  {
+                                         "guildIds":  [
+                                                          "YOUR_GUILD_ID"
+                                                      ],
+                                         "channelIds":  [
+                                                            "YOUR_CHANNEL_ID"
+                                                        ],
+                                         "value":  "!anime",
+                                         "additionalFields":  {
+
+                                                              }
+                                     },
+                      "type":  "n8n-nodes-discord-trigger-new.discordTrigger",
+                      "typeVersion":  1,
+                      "position":  [
+                                       -976,
+                                       -128
+                                   ],
+                      "id":  "REDACTED_NODE_ID",
+                      "name":  "Discord Trigger",
+                      "credentials":  {
+                                          "discordBotTriggerApi":  {
+                                                                       "id":  "REDACTED_CREDENTIAL_ID",
+                                                                       "name":  "REDACTED_CREDENTIAL_NAME"
+                                                                   }
+                                      }
+                  },
+                  {
+                      "parameters":  {
+                                         "resource":  "message",
+                                         "guildId":  {
+                                                         "__rl":  true,
+                                                         "value":  "YOUR_GUILD_ID",
+                                                         "mode":  "list",
+                                                         "cachedResultName":  "YOUR_SERVER_NAME",
+                                                         "cachedResultUrl":  "https://discord.com/channels/YOUR_GUILD_ID"
+                                                     },
+                                         "channelId":  {
+                                                           "__rl":  true,
+                                                           "value":  "YOUR_CHANNEL_ID",
+                                                           "mode":  "list",
+                                                           "cachedResultName":  "YOUR_CHANNEL_NAME",
+                                                           "cachedResultUrl":  "https://discord.com/channels/YOUR_GUILD_ID/YOUR_CHANNEL_ID"
+                                                       },
+                                         "content":  "={{ $json.images[0].url }}",
+                                         "options":  {
+
+                                                     }
+                                     },
+                      "type":  "n8n-nodes-base.discord",
+                      "typeVersion":  2,
+                      "position":  [
+                                       -128,
+                                       -144
+                                   ],
+                      "id":  "REDACTED_NODE_ID",
+                      "name":  "Send a message",
+                      "webhookId":  "REDACTED_WEBHOOK_ID",
+                      "credentials":  {
+                                          "discordBotApi":  {
+                                                                "id":  "REDACTED_CREDENTIAL_ID",
+                                                                "name":  "REDACTED_CREDENTIAL_NAME"
+                                                            }
+                                      }
+                  },
+                  {
+                      "parameters":  {
+                                         "method":  "POST",
+                                         "url":  "https://fal.run/fal-ai/bytedance/seedream/v5/lite/text-to-image",
+                                         "authentication":  "genericCredentialType",
+                                         "genericAuthType":  "httpHeaderAuth",
+                                         "sendHeaders":  true,
+                                         "headerParameters":  {
+                                                                  "parameters":  [
+                                                                                     {
+                                                                                         "name":  "Content-Type",
+                                                                                         "value":  "application/json"
+                                                                                     }
+                                                                                 ]
+                                                              },
+                                         "sendBody":  true,
+                                         "specifyBody":  "json",
+                                         "jsonBody":  "={\n  \"prompt\": \"={{ $json.finalPrompt }}\",\n  \"image_size\": \"portrait_4_3\",\n  \"num_images\": 1,\n  \"max_images\": 1,\n  \"enable_safety_checker\": true\n}",
+                                         "options":  {
+
+                                                     }
+                                     },
+                      "type":  "n8n-nodes-base.httpRequest",
+                      "typeVersion":  4.3,
+                      "position":  [
+                                       -352,
+                                       -144
+                                   ],
+                      "id":  "REDACTED_NODE_ID",
+                      "name":  "HTTP Request",
+                      "credentials":  {
+                                          "httpHeaderAuth":  {
+                                                                 "id":  "REDACTED_CREDENTIAL_ID",
+                                                                 "name":  "REDACTED_CREDENTIAL_NAME"
+                                                             }
+                                      }
+                  }
+              ],
+    "pinData":  {
+
+                },
+    "connections":  {
+                        "コマンド判定 (!anime)":  {
+                                                "main":  [
+                                                             [
+                                                                 {
+                                                                     "node":  "魔法のプロンプト付与",
+                                                                     "type":  "main",
+                                                                     "index":  0
+                                                                 }
+                                                             ]
+                                                         ]
+                                            },
+                        "魔法のプロンプト付与":  {
+                                           "main":  [
+                                                        [
+                                                            {
+                                                                "node":  "HTTP Request",
+                                                                "type":  "main",
+                                                                "index":  0
+                                                            }
+                                                        ]
+                                                    ]
+                                       },
+                        "Discord Trigger":  {
+                                                "main":  [
+                                                             [
+                                                                 {
+                                                                     "node":  "コマンド判定 (!anime)",
+                                                                     "type":  "main",
+                                                                     "index":  0
+                                                                 }
+                                                             ]
+                                                         ]
+                                            },
+                        "HTTP Request":  {
+                                             "main":  [
+                                                          [
+                                                              {
+                                                                  "node":  "Send a message",
+                                                                  "type":  "main",
+                                                                  "index":  0
+                                                              }
+                                                          ]
+                                                      ]
+                                         }
+                    },
+    "active":  true,
+    "settings":  {
+                     "executionOrder":  "v1"
+                 },
+    "versionId":  "REDACTED_VERSION_ID",
+    "meta":  {
+                 "templateCredsSetupCompleted":  true,
+                 "instanceId":  "REDACTED_INSTANCE_ID"
+             },
+    "id":  "REDACTED_WORKFLOW_ID",
+    "tags":  [
+
+             ]
+}
