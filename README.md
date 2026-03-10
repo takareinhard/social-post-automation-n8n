@@ -13,8 +13,6 @@ This project showcases how to design, sanitize, and publish a production-style w
 
 ## Why This Repository Exists
 
-This repository is designed to be a strong public artifact for portfolio scoring platforms such as `LAPRAS` and `Findy`.
-
 It demonstrates practical engineering skills beyond toy code:
 
 - workflow automation design
