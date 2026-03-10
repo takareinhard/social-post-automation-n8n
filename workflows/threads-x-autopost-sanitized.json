@@ -1,0 +1,1583 @@
+{
+  "name": "Threads and X Auto Post Workflow (Sanitized)",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "5 8 * * *"
+            },
+            {
+              "field": "cronExpression",
+              "expression": "20 12 * * *"
+            },
+            {
+              "field": "cronExpression",
+              "expression": "0 15 * * *"
+            },
+            {
+              "field": "cronExpression",
+              "expression": "30 20 * * *"
+            }
+          ]
+        }
+      },
+      "id": "7c1b32c8-a5c3-46da-9b70-8fba33fdca88",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -1152,
+        208
+      ]
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "__REDACTED_DOCUMENT_ID__",
+          "mode": "list",
+          "cachedResultName": "Redacted Google Sheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/__REDACTED__/edit"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "__REDACTED_SHEET_REF__",
+          "mode": "list",
+          "cachedResultName": "Redacted Sheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/__REDACTED__/edit#gid=__REDACTED__"
+        },
+        "options": {}
+      },
+      "id": "64c0c2d9-ccb9-4f9f-ab8c-1e67410c7fd2",
+      "name": "1. Get Counter",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -928,
+        208
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "__REDACTED__",
+          "name": "googleSheetsOAuth2Api (redacted)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "__REDACTED_DOCUMENT_ID__",
+          "mode": "list",
+          "cachedResultName": "Redacted Google Sheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/__REDACTED__/edit"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "__REDACTED_SHEET_REF__",
+          "mode": "list",
+          "cachedResultName": "Redacted Sheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/__REDACTED__/edit#gid=__REDACTED__"
+        },
+        "options": {}
+      },
+      "id": "5ebf0c05-8809-4726-8872-da2cfcb1c90e",
+      "name": "2. Get Content Row",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -720,
+        208
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "__REDACTED__",
+          "name": "googleSheetsOAuth2Api (redacted)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ parseInt($('1. Get Counter').item.json.counter) % 4 }}",
+                    "rightValue": 0,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    },
+                    "id": "4b5a8174-ca69-43d9-ad60-98dd4e498916"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ parseInt($('1. Get Counter').item.json.counter) % 4 }}",
+                    "rightValue": 1,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    },
+                    "id": "b57166fc-1dcf-44e0-bb63-0674dc746291"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "548d1026-d2b3-4e80-bf49-900cbbf2821c",
+                    "leftValue": "={{ parseInt($('1. Get Counter').item.json.counter) % 4 }}",
+                    "rightValue": "2",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "0d61c8f5-db56-494b-b99e-37d1dd01bcb1",
+                    "leftValue": "={{ parseInt($('1. Get Counter').item.json.counter) % 4 }}",
+                    "rightValue": "3",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "id": "28f8d2fb-dfbf-4570-885a-cd99d4dcaea8",
+      "name": "3. Switch (A/B Test)",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -256,
+        192
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.threads.net/v1.0/__REDACTED_USER_ID__/threads",
+        "sendBody": true,
+        "contentType": "form-urlencoded",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "media_type",
+              "value": "TEXT"
+            },
+            {
+              "name": "text",
+              "value": "={{ $json.text }}"
+            },
+            {
+              "name": "access_token",
+              "value": "__REDACTED_ACCESS_TOKEN__"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2560,
+        208
+      ],
+      "id": "64347dc2-94a8-4498-900a-2ccd0fd70eae",
+      "name": "HTTP Request",
+      "retryOnFail": true,
+      "maxTries": 5
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        -512,
+        208
+      ],
+      "id": "68d7dd9f-6534-4c40-bc29-bcf6972158c2",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.threads.net/v1.0/__REDACTED_USER_ID__/threads_publish",
+        "sendBody": true,
+        "contentType": "form-urlencoded",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "creation_id",
+              "value": "={{ $json.body.id }}"
+            },
+            {
+              "name": "access_token",
+              "value": "__REDACTED_ACCESS_TOKEN__"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2768,
+        208
+      ],
+      "id": "1c6ad1b8-69a3-42ed-be9a-27c68b41f79e",
+      "name": "HTTP Request1",
+      "retryOnFail": true,
+      "maxTries": 5
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b28d27ee-77b1-4b3d-8bfa-d5fc7de76a01",
+              "name": "=text",
+              "value": "={{ $json['内容'] || $json.content?.parts?.[0]?.text || $json.content?.[0]?.text ||  $json.output }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2336,
+        208
+      ],
+      "id": "0ef32ba7-5c54-42b1-90e6-6f5980193e64",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "claude-sonnet-4-5-20250929",
+          "mode": "list",
+          "cachedResultName": "Configured model"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=あなたは、才能ある原石を完璧な宝石へと磨き上げる、超一流の「スクリプトドクター」です。あなたの役割は、提供された「原案シナリオ」を、「ヒットの法則」という絶対的な基準に照らし合わせ、論理的かつ芸術的に完璧な傑作へと昇華させることです。\n\n# 改善対象のシナリオ\n{{ $json.content.parts[0].text }}\n\n# あなたのタスク\n上記の「原案」を深く理解し、以下の指針に基づいて原案を全く新しい【完成版シナリオ】へと再構築してください。【1本だけ】出力してください。\n\n# 再構築の指針\n1.核の抽出と破壊: まず、原案の「面白いと感じる部分(核)」を一つだけ見つけ出してください。それ以外の部分は一度すべて捨て去るつもりで構いません。\n2.ヒット構造の注入: 次に、知識ベースの中から最も相性の良い「ヒットの構造」(例:「痛烈なカウンター」「知的などんでん返し」「感情のジェットコースター」「逆説的洞察」など)を一つ選び、抽出した「核」と強制的に融合させてください。\n3.パワーワードの創造: シナリオ全体を締めくくる、あるいは状況を180度ひっくり返すような、**記憶に残り、議論を呼び、真似したくなる「パワーワード」あるいは「キラーフレーズ」**を必ず一つ発明し、組み込んでください。\n4.引き算の徹底: 完成までの最終工程として、パワーワードを最も際立たせるために、不要なセリフや説明を極限まで削ぎ落としてください。\n【重要】 分析や解説は一切不要です。完成された最終シナリオのみを出力してください。\n\n# 制約条件\n1.オリジナリティ: 「ヒットの法則」のみを応用し、全く新しいオリジナルなシナリオであること。(原案のオリジナリティを維持・向上させる)\n2.文字数: 全文で200文字以内。\n3.【重要】出力形式: 以下の形式を一字一句違わず、厳密に守って出力してください。この形式以外のいかなるテキスト(例:「# 生成シナリオ」、説明、分析など)も絶対に出力してはいけません。\n\n(キャラクター名)「(セリフ)」\n(キャラクター名)「(セリフ)」\n(キャラクター名)「(セリフ)」\n(キャラクター名)「(セリフ)」\n(必要であれば、ト書きや絵文字も使用可)"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "bce7d66b-20dd-43d6-a902-c1e259049f83",
+      "name": "Claude ",
+      "type": "@n8n/n8n-nodes-langchain.anthropic",
+      "typeVersion": 1,
+      "position": [
+        1648,
+        0
+      ],
+      "retryOnFail": true,
+      "maxTries": 5,
+      "credentials": {
+        "anthropicApi": {
+          "id": "__REDACTED__",
+          "name": "anthropicApi (redacted)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "858c6718-b244-429a-9ff7-0ff8eebb413d",
+              "name": "next_counter",
+              "value": "={{ $('1. Get Counter').first().json.scenario_counter >= 9 ? 1 : $('1. Get Counter').first().json.scenario_counter + 1 }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        3184,
+        208
+      ],
+      "id": "9fa6d57f-b1b0-4a8c-aed0-472c6845dbb1",
+      "name": "次回のシナリオカウンター計算"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "__REDACTED_DOCUMENT_ID__",
+          "mode": "list",
+          "cachedResultName": "Redacted Google Sheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/__REDACTED__/edit"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "__REDACTED_SHEET_REF__",
+          "mode": "list",
+          "cachedResultName": "Redacted Sheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/__REDACTED__/edit#gid=__REDACTED__"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "counter": "={{ parseInt($('1. Get Counter').first().json.counter) + 1 }}",
+            "row_number": 2
+          },
+          "matchingColumns": [
+            "row_number"
+          ],
+          "schema": [
+            {
+              "id": "counter",
+              "displayName": "counter",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "scenario_counter",
+              "displayName": "scenario_counter",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        2976,
+        208
+      ],
+      "id": "a7432a3b-b55a-429b-83c2-22e14d6515c1",
+      "name": "カウンターアップデート",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "__REDACTED__",
+          "name": "googleSheetsOAuth2Api (redacted)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "__REDACTED_DOCUMENT_ID__",
+          "mode": "list",
+          "cachedResultName": "Redacted Google Sheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/__REDACTED__/edit"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "__REDACTED_SHEET_REF__",
+          "mode": "list",
+          "cachedResultName": "Redacted Sheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/__REDACTED__/edit#gid=__REDACTED__"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "scenario_counter": "={{ $json.next_counter }}",
+            "row_number": 2
+          },
+          "matchingColumns": [
+            "row_number"
+          ],
+          "schema": [
+            {
+              "id": "counter",
+              "displayName": "counter",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "scenario_counter",
+              "displayName": "scenario_counter",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        3392,
+        208
+      ],
+      "id": "88fac2cb-2220-4ba6-adf9-77a6ee18e284",
+      "name": "シナリオカウンターアップデート",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "__REDACTED__",
+          "name": "googleSheetsOAuth2Api (redacted)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "__REDACTED_DOCUMENT_ID__",
+          "mode": "list",
+          "cachedResultName": "Redacted Google Sheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/__REDACTED__/edit"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "__REDACTED_SHEET_REF__",
+          "mode": "list",
+          "cachedResultName": "Redacted Sheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/__REDACTED__/edit#gid=__REDACTED__"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        624,
+        -16
+      ],
+      "id": "01ea2433-35d5-4446-af81-87fd11fbe676",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "__REDACTED__",
+          "name": "googleSheetsOAuth2Api (redacted)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// すべての入力アイテムを取得します\nconst items = $input.all();\n\n// 1. 各アイテムのJSONデータを抽出\nconst allJsonData = items.map(item => item.json);\n\n// 2. 「順位」が30以下のアイテムのみにフィルタリング\n//    - parseInt() を使って、文字列の可能性がある「順位」を確実に数値として比較します\nconst filteredData = allJsonData.filter(item => parseInt(item['順位'], 10) <= 30);\n\n// 3. 念のため「順位」の昇順で並び替え\n//    - 元データが順位順でない可能性も考慮してソートします\nconst sortedData = filteredData.sort((a, b) => parseInt(a['順位'], 10) - parseInt(b['順位'], 10));\n\n// 4. 上位30件（またはそれ以下）のデータを'all_contents'として出力\nreturn [\n  {\n    json: {\n      all_contents: sortedData\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        848,
+        -112
+      ],
+      "id": "c65b4939-d3fb-4406-912d-5296f241543a",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-3-flash-preview",
+          "mode": "list",
+          "cachedResultName": "Configured model"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=あなたは、SNSで議論を巻き起こす投稿を作る天才プランナーです。あなたの任務は、合コンを舞台にした、男女の「どっちもどっち」な対立を描くショートコントの原案を1本だけ作成することです。\n\n#インスピレーションの源泉(知識ベース)\n{{JSON.stringify($('Aggregate').item.json.data)}}\n\n#過去作成した投稿\n{{JSON.stringify($('Aggregate2').item.json.data)}}\n\n#あなたのタスク\n上記の知識ベースから「ヒットの法則」のインスピレーションを受けつつ、以下の指示に従って、ショートコントの原案を【1本だけ】生成してください。\n\n#原案作成の指針\n・議論の火種を最優先: 「どっちが悪い?」と聞かれたら、誰もが少し考えてしまうような、単純な善悪で判断できないシチュエーションを考えてください。 ・共感できる対立: 男性側、女性側、それぞれの行動に「まあ、そう言いたくなる気持ちも分かるな…」と思えるような、小さな正当性を持たせてください。 ・分かりやすさ: 誰が読んでも一瞬で状況が理解できる、シンプルで明確なセリフを心がけてください。完璧なロジックは不要です。面白く、議論を呼びそうな「核となるアイデア」を作ることに集中してください。\n\n#制約条件\n1.テーマ: 合コンでの男女対立。「どっちもどっち」な状況を描くこと。年収の話は合コンであまりすることはないので避けてください。\n2.文字数: 全文で200文字以内。\n3.「過去作成した投稿」と同じような投稿はしないでください。\n4.【最重要】出力形式: 以下の形式を一字一句違わず、厳密に守って出力してください。\nこの形式以外のいかなるテキスト(例:「#生成シナリオ」、説明、分析など)も絶対に出力してはいけません。\n5.原案は1本だけ作成してください。\n\n合コン\n(キャラクター名)「(セリフ)」\n(キャラクター名)「(セリフ)」\n(必要であれば、ト書きや絵文字も使用可)\n\n#多様性を生むための追加指示\n毎回以下の要素からランダムに1つ以上を選択し、シナリオに組み込んでください:\n\n##対立の切り口(必ず1つ選択)\n\n価値観の違い(趣味、ライフスタイル、優先順位など)\nコミュニケーションのズレ(言葉の受け取り方、期待値の差など)\nマナー・配慮の違い(気遣いの温度差、常識の違いなど)\nタイミングの悪さ(誰も悪くないが状況が噛み合わない)\n立場の違いによる見え方の差(それぞれの正義がぶつかる)\n\n##シチュエーション例(毎回違うものを選択推奨)\n\n注文・支払いの場面\n連絡先交換の場面\n話題選びの場面\n二次会の誘い方\n席替えや移動のタイミング\nSNSやスマホの使い方\n食事のマナーや好み\n過去の恋愛話\n趣味や休日の過ごし方\n仕事の話題の扱い方\nお酒の飲み方・勧め方\n時間配分や帰るタイミング\nキャラクター設定のバリエーション\n\n##毎回異なる性格・立場のキャラクターを設定してください:\n\n真面目系/フランク系\n積極的/控えめ\n几帳面/おおらか\n理論派/感覚派\n社交的/内向的\n年上/年下意識\n初参加/常連\n\n##トーンのバリエーション\nちょっとシリアス\nコミカル\nシュール\nリアル寄り\n誇張表現強め\nこれらの要素を組み合わせることで、毎回全く異なる角度からの「どっちもどっち」を描いてください。同じパターンの繰り返しは避け、読者が「あ、これは新しい視点だ」と感じるような原案を目指してください。\n\n# 最終確認\n- 出力するのは会話形式のシナリオ1本のみ\n- 複数案、バリエーション、代替案は不要\n- 分析、解説、タイトルも不要\n\n━━━━━━━━━━━━━━━━━━━━\n【重要】この生成リクエストの識別情報:\nリクエストID: {{ $now.toMillis() }}\n生成日時: {{ $now.format('yyyy-MM-dd HH:mm:ss') }}\n\n⚠️ このIDは前回と異なります。前回の発想・パターン・表現を繰り返さず、\n完全に新しい角度から「どっちもどっち」を描いてください。\n━━━━━━━━━━━━━━━━━━━━"
+            }
+          ]
+        },
+        "options": {
+          "temperature": 1.2,
+          "topP": 1,
+          "topK": 50
+        }
+      },
+      "id": "da6cd3bf-8579-487a-bd4c-6d3a6304ccd1",
+      "name": "Gemini3",
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        896,
+        640
+      ],
+      "retryOnFail": true,
+      "maxTries": 5,
+      "credentials": {
+        "googlePalmApi": {
+          "id": "__REDACTED__",
+          "name": "googlePalmApi (redacted)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "claude-sonnet-4-5-20250929",
+          "mode": "list",
+          "cachedResultName": "Configured model"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=あなたは、才能ある原石を完璧な宝石へと磨き上げる、超一流の「スクリプトドクター」です。あなたの役割は、提供された「原案シナリオ」を、「ヒットの法則」という絶対的な基準に照らし合わせ、論理的かつ芸術的に完璧な傑作へと昇華させることです。\n\n# 改善対象のシナリオ\n{{ $json.candidates[0].content.parts[0].text }}\n\n# あなたのタスク\n上記の「原案」を深く理解し、以下の指針に基づいて原案を全く新しい【完成版シナリオ】へと再構築してください。【1本だけ】出力してください。\n\n# 再構築の指針\n1.核の抽出と破壊: まず、原案の「面白いと感じる部分(核)」を一つだけ見つけ出してください。それ以外の部分は一度すべて捨て去るつもりで構いません。\n2.ヒット構造の注入: 次に「ヒットの構造」(例:「痛烈なカウンター」「知的などんでん返し」「感情のジェットコースター」「逆説的洞察」など)を一つ選び、抽出した「核」と強制的に融合させてください。\n3.パワーワードの創造: シナリオ全体を締めくくる、あるいは状況を180度ひっくり返すような、**記憶に残り、議論を呼び、真似したくなる「パワーワード」あるいは「キラーフレーズ」**を必ず一つ発明し、組み込んでください。\n4.引き算の徹底: 完成までの最終工程として、パワーワードを最も際立たせるために、不要なセリフや説明を極限まで削ぎ落としてください。\n【重要】 分析や解説は一切不要です。完成された最終シナリオのみを出力してください。\n\n# 制約条件\n1.オリジナリティ: 「ヒットの法則」のみを応用し、全く新しいオリジナルなシナリオであること。(原案のオリジナリティを維持・向上させる)\n2.文字数: 全文で200文字以内。\n3.【重要】出力形式: 以下の形式を一字一句違わず、厳密に守って出力してください。この形式以外のいかなるテキスト(例:「# 生成シナリオ」、説明、分析など)も絶対に出力してはいけません。\n\n(キャラクター名)「(セリフ)」\n(キャラクター名)「(セリフ)」\n(キャラクター名)「(セリフ)」\n(キャラクター名)「(セリフ)」\n(必要であれば、ト書きや絵文字も使用可)"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "d17b42a3-cb1d-41b1-a308-d2f82400ef50",
+      "name": "Claude 4",
+      "type": "@n8n/n8n-nodes-langchain.anthropic",
+      "typeVersion": 1,
+      "position": [
+        1264,
+        224
+      ],
+      "retryOnFail": true,
+      "maxTries": 5,
+      "credentials": {
+        "anthropicApi": {
+          "id": "__REDACTED__",
+          "name": "anthropicApi (redacted)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "claude-sonnet-4-5-20250929",
+          "mode": "list",
+          "cachedResultName": "Configured model"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=あなたは、SNSで議論を巻き起こす「炎上しない絶妙な火種」を作る天才プランナーです。あなたの任務は、合コンを舞台にした、男女の「どっちもどっち」な対立を描くショートコントの原案を1本だけ作成することです。\n\nインスピレーションの源泉(知識ベース)\n{{ JSON.stringify($('Aggregate').item.json.data, null, 2) }}\n\nあなたのタスク\n上記の知識ベースから「ヒットの法則」のインスピレーションを受けつつ、以下の指示に従って、ショートコントの原案を【1本だけ】生成してください。\n\n原案作成の指針\n・議論の火種を最優先: 「どっちが悪い?」と聞かれたら、誰もが少し考えてしまうような、単純な善悪で判断できないシチュエーションを考えてください。\n・共感できる対立: 男性側、女性側、それぞれの行動に「まあ、そう言いたくなる気持ちも分かるな…」と思えるような、小さな正当性を持たせてください。\n・分かりやすさ: 誰が読んでも一瞬で状況が理解できる、シンプルで明確なセリフを心がけてください。完璧なロジックは不要です。面白く、議論を呼びそうな「核となるアイデア」を作ることに集中してください。\n\n制約条件\n1.テーマ: 合コンでの男女対立。「どっちもどっち」な状況を描くこと。年収の話は合コンであまりすることはないので避けてください。\n2.文字数: 全文で300文字以内。\n3.【最重要】出力形式: 以下の形式を一字一句違わず、厳密に守って出力してください。この形式以外のいかなるテキスト(例:「#生成シナリオ」、説明、分析など)も絶対に出力してはいけません。\n\n合コン\n(キャラクター名)「(セリフ)」\n(キャラクター名)「(セリフ)」\n(必要であれば、ト書きや絵文字も使用可)"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "14c62c8f-2ddc-4ba4-8f4d-c0439298ee82",
+      "name": "Claude 5",
+      "type": "@n8n/n8n-nodes-langchain.anthropic",
+      "typeVersion": 1,
+      "position": [
+        176,
+        1392
+      ],
+      "retryOnFail": true,
+      "maxTries": 5,
+      "credentials": {
+        "anthropicApi": {
+          "id": "__REDACTED__",
+          "name": "anthropicApi (redacted)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-3-pro-preview",
+          "mode": "list",
+          "cachedResultName": "Configured model"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=あなたは、抽象的なコンセプトから具体的な物語を生み出す、発想力豊かなコンセプトアーティストです。あなたの任務は、提供された「ヒットの法則」からインスピレーションを受け、全く新しいショートコントの**『原案』**を1本だけ作成することです。\n\n# インスピレーションの源泉（抽象化されたヒットの法則）\n---\n{{ $json.content[0].text }}\n---\n\n# あなたのタスク\n上記の「ヒットの法則」をあなたの創造力のエンジンとして、以下の指示に従って、ショートコントの**『原案』**を【1本だけ】生成してください。\n\n**# 原案作成の指針**\n*   **自由な発想を最優先:** 「ヒットの法則」をヒントに、自由に発想してください。法則を文字通りなぞるのではなく、その「精神」をあなたのアイデアで表現することが重要です。\n*   **面白さの核を作る:** 複雑な構成よりも、視聴者が「なるほど！」や「面白い！」と感じるアイデアの核をシンプルに表現してください。\n*   **完璧である必要はありません。** これはあくまで「原案」です。次の工程で超一流の脚本家が磨き上げるための、「最高の素材」を作ることに集中してください。\n\n# 制約条件\n1.  **テーマ**: 男と女の価値観のズレや勘違い\n2.  **文字数**: 全文で500文字以内\n3.  **【重要】出力形式**: 以下の形式を**一字一句違わず、厳密に守って出力してください。** この形式以外のいかなるテキスト（例：「# 生成シナリオ」、説明、分析など）も**絶対に出力してはいけません。**\n\n（キャラクター名）「（セリフ）」\n（キャラクター名）「（セリフ）」\n（キャラクター名）「（セリフ）」\n（必要であれば、ト書きや絵文字も使用可）"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "45ebfd60-6447-4fbe-b3cd-47726bc0b837",
+      "name": "Gemini",
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        -160,
+        1392
+      ],
+      "retryOnFail": true,
+      "maxTries": 5,
+      "credentials": {
+        "googlePalmApi": {
+          "id": "__REDACTED__",
+          "name": "googlePalmApi (redacted)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-3-flash-preview",
+          "mode": "list",
+          "cachedResultName": "Configured model"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=あなたは、日本のSNS(X、TikTok、Instagram)で高いエンゲージメントを生み出す「ショートコント」の専門シナリオライターです。\nあなたの任務は、全く新しいショートコントの原案を1本だけ作成することです。\n\n#インスピレーションの源泉(知識ベース)\n{{JSON.stringify($('Aggregate').item.json.data)}}\n\n#過去作成した投稿\n{{JSON.stringify($('Aggregate1').item.json.data)}}\n\n# あなたのミッション\n知識ベースの構造や法則を活かしつつ、以下の条件を満たす新しいショートコントを1本だけ生成してください。 Rankが高い順の情報を参考にしてください。\n\n# 構成ルール\n会話のみで構成し、説明文は不要\nテンポ重視で、1発言は短く(20〜40文字程度)\n会話のターン数: 4〜7往復(柔軟に調整可)\n全体文字数: 200文字まで(硬い制限ではなく目安)\n出力形式\n(キャラクター名)「(セリフ)」 (キャラクター名)「(セリフ)」 ...\n\n# キャラクター名の例:\n母/娘、祖母/孫、友人A/友人B、客/店員、カップル、先輩/後輩 など 状況が明確なら「男/女」でもOK\n\n# テーマの方向性(仕事以外)\n以下のような日常的で共感しやすいテーマを中心に:\n\n家族の日常(親子、祖父母と孫、兄弟姉妹など)\n恋愛・カップル(デート、プロポーズ、夫婦の会話など)\n友人関係(飲み会、遊びの誘い、相談など)\n公共の場でのやりとり(電車内、店員と客、合コンなど)\n世代間ギャップ(価値観の違い、マナー、ライフスタイルなど)\n現代社会あるある(SNS、配達、宅配便、免許返納など)\n\n# 重要な指示\nショートコントの原案は1本だけ作成してください\n見出し、説明、思考過程は一切出力しない\nシナリオ本文のみを出力する\n毎回異なるテーマ・トーン・キャラクター構成を意識する\n知識ベースの成功パターンを参考にしつつ、型にはまりすぎない\n仕事・ビジネスシーンの話は避ける(上司部下、会議、営業など除外)\n過去作成した投稿と同じような内容の投稿は作らないでください\n\n# 知識ベースから学ぶべき構造\n論理的反転(結婚式→葬式のような対比)\n逆説的洞察(判断力があるから返納、のような深い気づき)\n感情ジェットコースター(不安→感動の大きな振れ幅)\n言葉遊び・誤解のオチ(やまと=ヤマト運輸)\n社会的批判→許容の転換(電車内の電話→出産報告)\n期待の裏切り(ロマンティック→現実的)\n痛烈な切り返し(取り分け→ママが取り分けてくれるの?)\n優しいギャップ(ヤンキーが配慮する)\n\n# 最終確認\n- 出力するのは会話形式のシナリオ1本のみ\n- 複数案、バリエーション、代替案は不要\n- 分析、解説、タイトルも不要\n\n━━━━━━━━━━━━━━━━━━━━\n【重要】この生成リクエストの識別情報:\nリクエストID: {{ $now.toMillis() }}\n生成日時: {{ $now.format('yyyy-MM-dd HH:mm:ss') }}\n\n⚠️ このIDは前回と異なります。前回の発想・パターン・表現を繰り返さず、\n完全に新しい角度から「どっちもどっち」を描いてください。\n━━━━━━━━━━━━━━━━━━━━"
+            }
+          ]
+        },
+        "simplify": false,
+        "options": {
+          "temperature": 1.2,
+          "topP": 1,
+          "topK": 50
+        }
+      },
+      "id": "38d3a62c-d5e5-4ed1-9dfe-fb23cbbb6bd8",
+      "name": "Gemini4",
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        912,
+        224
+      ],
+      "retryOnFail": true,
+      "maxTries": 5,
+      "executeOnce": false,
+      "alwaysOutputData": false,
+      "credentials": {
+        "googlePalmApi": {
+          "id": "__REDACTED__",
+          "name": "googlePalmApi (redacted)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-3-flash-preview",
+          "mode": "list",
+          "cachedResultName": "Configured model"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=あなたは、日本のSNSでバイラルする短い投稿を分析する、超一流のアナリストです。あなたの役割は、提供された成功事例のデータを完璧に理解し、その根底にある「ヒットの法則」を抽象化してデータ化することです。\n\n知識ベース(成功事例データ)\n以下に、Threadsで投稿したデータのインサイトを送ります。これがあなたの思考の基盤となります。\n\n{{ JSON.stringify($json.all_contents, null, 2) }}\n\nあなたのタスク:法則の抽象化\n知識ベースの投稿群を分析し、共通する「ヒットの法則」を以下の観点から多角的に抽出・言語化してください。これはあなたのシナリオ作成のための思考の土台となります。この思考プロセスは出力に含めず、内部での分析にとどめてください。\n\n1. 構造の法則(プロットの型)\nどのような会話の流れで読者を引き込み、最後に「なるほど!」と思わせているか?\n分析のヒント:\n・「A vs B」という対比構造\n・「常識の提示 → その常識の再定義」という展開\n・「問いかけ → 予想外の答え」という構成\n\n2. キャラクターの法則(登場人物の役割)\n投稿にはどのような役割の人物が(暗に)登場しているか?\n分析のヒント:\n・浅い理解で語る「一般人」役 vs 本質を突く「賢者」役\n・自信満々な「勘違い者」役 vs 冷静に事実を突きつける「観察者」役\n\n3. パンチラインの法則(決め台詞の作り方)\n読者がハッとする「決め台詞」は、どのようなテクニックで作られているか?\n分析のヒント:\n・言葉の言い換え:「\"迎えに行く\"ではなく\"迎えに行かせて\"」\n・価値の再定義:「\"なんでもいい\"は信頼の証」\n・比較による格付け:「\"愛してる\"より\"大切にする\"」\n※具体的なフレーズの変換テクニックを分析してください。\n\n4. 感情の法則(読後感の設計)\n読者にどのような感情を喚起させているか? 単なる「論破の爽快感」だけではないはず。\n分析のヒント:\n・モヤモヤしていたことの言語化による「スッキリ感」\n・新しい視点を得た「発見」\n・自分も気をつけようという「自省」\n・あるあるネタへの「共感」\n\n5. テーマの法則(題材の選び方)\nどのようなテーマが、人々の関心を引き、バイラルに繋がりやすいか?\n分析のヒント:\n・恋愛、仕事、コミュニケーションにおける「一流と二流」「本物と偽物」「モテる人とモテない人」の違いなど\n・多くの人が当事者意識を持つテーマ\n\n━━━━━━━━━━━━━━━━━━━━\n【重要】この生成リクエストの識別情報:\nリクエストID: {{ $now.toMillis() }}\n生成日時: {{ $now.format('yyyy-MM-dd HH:mm:ss') }}\n\n⚠️ このIDは前回と異なります。前回の発想・パターン・表現を繰り返さず、\n完全に新しい角度から分析する\n━━━━━━━━━━━━━━━━━━━━"
+            }
+          ]
+        },
+        "options": {
+          "temperature": 1.2,
+          "topP": 1,
+          "topK": 50
+        }
+      },
+      "id": "5e62d752-025b-481b-8320-0c60b77304fc",
+      "name": "Gemini1",
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        1056,
+        -256
+      ],
+      "retryOnFail": true,
+      "maxTries": 5,
+      "credentials": {
+        "googlePalmApi": {
+          "id": "__REDACTED__",
+          "name": "googlePalmApi (redacted)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-3-flash-preview",
+          "mode": "list",
+          "cachedResultName": "Configured model"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=あなたは、抽象的なコンセプトから具体的な物語を生み出す、発想力豊かなコンセプトアーティストです。あなたの任務は、提供された「ヒットの法則」からインスピレーションを受け、全く新しいショートコントの原案を1本だけ作成することです。\n\n#インスピレーションの源泉(抽象化されたヒットの法則)\n{{ $json.content.parts[0].text }}\n\n#あなたのタスク\n上記の「ヒットの法則」をあなたの創造力のエンジンとして、以下の指示に従って、ショートコントの原案を【1本だけ】生成してください。\n\n##原案作成の指針\n・自由な発想を最優先: 「ヒットの法則」をヒントに、自由に発想してください。法則を文字通りなぞるのではなく、その「精神」をあなたのアイデアで表現することが重要です。\n・面白さの核を作る: 複雑な構成よりも、視聴者が「なるほど!」や「面白い!」と感じるアイデアの核をシンプルに表現してください。\n・完璧である必要はありません: これはあくまで「原案」です。次の工程で超一流の脚本家が磨き上げるための、「最高の素材」を作ることに集中してください。\n\n#制約条件\n1.テーマ: 男と女の価値観のズレや勘違い\n2.文字数: 全文で200文字以内 3.【重要】出力形式: 以下の形式を一字一句違わず、厳密に守って出力してください。この形式以外のいかなるテキスト(例:「#生成シナリオ」、説明、分析など)も絶対に出力してはいけません。\n3.過去作成した投稿と同じような内容の投稿は作らないでください\n\n(キャラクター名)「(セリフ)」\n(キャラクター名)「(セリフ)」\n(キャラクター名)「(セリフ)」\n(必要であれば、ト書きや絵文字も使用可)\n\n#多様性を生むための追加指示\n毎回異なる角度からの物語を作るため、以下の要素からランダムに組み合わせてシナリオを構築してください\n\n##価値観のズレの種類(必ず1つ選択)\n言葉の定義の違い(同じ言葉が男女で違う意味を持つ)\n優先順位の違い(何を大切にするかの差)\n期待値のズレ(相手に求めるものの差)\n察する/言うの文化の違い\n時間軸の違い(今すぐ/いつか、短期/長期)\n感情と論理のズレ\n表現方法の違い(直接的/間接的)\n愛情表現の形の違い\n記憶の解釈の違い(同じ出来事の異なる記憶)\n社会的役割の認識の違い\n\n##シチュエーション(毎回違う場面を選択)\nデート中の会話\nLINEやメッセージのやり取り\nプレゼントを贈る/もらう\n記念日や特別な日\n日常の何気ない瞬間\n喧嘩や仲直り\n友達や家族の話\n将来の話\n過去の思い出を語る\n相談事や悩み\nSNS投稿について\n買い物や食事の選択\n休日の過ごし方\n疲れている時の対応\nサプライズ\n関係性のバリエーション\nカップル(付き合いたて/長年)\n夫婦(新婚/ベテラン)\n片思い中\n元カレ・元カノ\n友達以上恋人未満\nマッチングアプリで知り合った\n職場の同僚\n幼馴染\n遠距離中\n\n##コントの構造パターン(バリエーションを持たせる)\nA「誤解」→ B「さらなる誤解」→ ズレが明確に\nA「提案」→ B「別の解釈」→ すれ違い\nA「質問」→ B「意外な答え」→ 価値観の差が露呈\nA「行動」→ B「予想外の反応」→ 認識のズレ\n回想形式で過去のズレを描く\n第三者視点でズレを浮き彫りに\nモノローグ形式で内心の違いを見せる\nトーンとスタイル(毎回変える)\nほのぼの系\nちょっと切ない\nシュールで不条理\nリアルで共感重視\nコミカルで誇張\n皮肉っぽい\n詩的・比喩的\nドキュメンタリー風\nドラマチック\n\n##時間設定\n朝\n昼\n夕方\n夜\n深夜\n季節感(春夏秋冬)\n特定のイベント時期\n感情の着地点(バリエーション)\n笑いで終わる\nほろ苦さを残す\n「あるある」な共感\nハッとする気づき\nもどかしさ\n温かさ\n諦念\n愛おしさ\n\n##重要: パターン回避のルール\nできるだけ意外性のある組み合わせを試す\nこれらの要素を自由に組み合わせ、毎回「こんな角度があったのか!」と驚かせるような、新鮮な価値観のズレを描いてください。同じパターンの繰り返しは絶対に避け、無限のバリエーションを生み出すことを目指してください。\n\n━━━━━━━━━━━━━━━━━━━━\n【重要】この生成リクエストの識別情報:\nリクエストID: {{ $now.toMillis() }}\n生成日時: {{ $now.format('yyyy-MM-dd HH:mm:ss') }}\n\n⚠️ このIDは前回と異なります。前回の発想・パターン・表現を繰り返さず、\n完全に新しい角度から「どっちもどっち」を描いてください。\n━━━━━━━━━━━━━━━━━━━━"
+            }
+          ]
+        },
+        "options": {
+          "temperature": 1.2,
+          "topP": 1,
+          "topK": 50
+        }
+      },
+      "id": "d359bd72-448a-4e90-a984-6ec34c1534bc",
+      "name": "Gemini2",
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        1360,
+        -128
+      ],
+      "retryOnFail": true,
+      "maxTries": 5,
+      "credentials": {
+        "googlePalmApi": {
+          "id": "__REDACTED__",
+          "name": "googlePalmApi (redacted)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=あなたは、抽象的なコンセプトから具体的な物語を生み出す、発想力豊かなコンセプトアーティストです。あなたの任務は、toolからインスピレーションを受け、全く新しいショートコントの**『原案』**を1本だけ作成することです。\n\n# あなたのタスク\n上記の「ヒットの法則」をあなたの創造力のエンジンとして、以下の指示に従って、ショートコントの**『原案』**を【1本だけ】生成してください。\n\n**# 原案作成の指針**\n*   **自由な発想を最優先:** 「ヒットの法則」をヒントに、自由に発想してください。法則を文字通りなぞるのではなく、その「精神」をあなたのアイデアで表現することが重要です。\n*   **面白さの核を作る:** 複雑な構成よりも、視聴者が「なるほど！」や「面白い！」と感じるアイデアの核をシンプルに表現してください。\n*   **完璧である必要はありません。** これはあくまで「原案」です。次の工程で超一流の脚本家が磨き上げるための、「最高の素材」を作ることに集中してください。\n\n# 制約条件\n1.  **テーマ**: 男と女の価値観のズレや勘違い\n2.  **文字数**: 全文で200文字以内\n3.  **【重要】出力形式**: 以下の形式を**一字一句違わず、厳密に守って出力してください。** この形式以外のいかなるテキスト（例：「# 生成シナリオ」、説明、分析など）も**絶対に出力してはいけません。**\n\n（キャラクター名）「（セリフ）」\n（キャラクター名）「（セリフ）」\n（キャラクター名）「（セリフ）」\n（必要であれば、ト書きや絵文字も使用可）",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        848,
+        1104
+      ],
+      "id": "64f4605b-61f4-4776-9a4c-03d04cf86f7d",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "__REDACTED_DOCUMENT_ID__",
+          "mode": "list",
+          "cachedResultName": "Redacted Google Sheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/__REDACTED__/edit"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "__REDACTED_SHEET_REF__",
+          "mode": "list",
+          "cachedResultName": "Redacted Sheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/__REDACTED__/edit#gid=__REDACTED__"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "日付": "={{$now.format('yyyy/MM/dd HH:mm:ss')}}",
+            "内容": "={{ $json.content[0].text }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "日付",
+              "displayName": "日付",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "内容",
+              "displayName": "内容",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1728,
+        224
+      ],
+      "id": "2ed9a3f9-955b-4fba-a13f-a57b0749f266",
+      "name": "Append row in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "__REDACTED__",
+          "name": "googleSheetsOAuth2Api (redacted)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "__REDACTED_DOCUMENT_ID__",
+          "mode": "list",
+          "cachedResultName": "Redacted Google Sheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/__REDACTED__/edit"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "__REDACTED_SHEET_REF__",
+          "mode": "list",
+          "cachedResultName": "Redacted Sheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/__REDACTED__/edit#gid=__REDACTED__"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        352,
+        224
+      ],
+      "id": "3d48211b-71be-460f-a982-239911a301d4",
+      "name": "Get row(s) in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "__REDACTED__",
+          "name": "googleSheetsOAuth2Api (redacted)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "__REDACTED_DOCUMENT_ID__",
+          "mode": "list",
+          "cachedResultName": "Redacted Google Sheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/__REDACTED__/edit"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "__REDACTED_SHEET_REF__",
+          "mode": "list",
+          "cachedResultName": "Redacted Sheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/__REDACTED__/edit#gid=__REDACTED__"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        352,
+        528
+      ],
+      "id": "3cb55ced-a33f-4979-82dd-7f8275377991",
+      "name": "Get row(s) in sheet2",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "__REDACTED__",
+          "name": "googleSheetsOAuth2Api (redacted)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "__REDACTED_DOCUMENT_ID__",
+          "mode": "list",
+          "cachedResultName": "Redacted Google Sheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/__REDACTED__/edit"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "__REDACTED_SHEET_REF__",
+          "mode": "list",
+          "cachedResultName": "Redacted Sheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/__REDACTED__/edit#gid=__REDACTED__"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "日付": "={{$now.format('yyyy/MM/dd HH:mm:ss')}}",
+            "内容": "={{ $json.content[0].text }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "日付",
+              "displayName": "日付",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "内容",
+              "displayName": "内容",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1728,
+        640
+      ],
+      "id": "f09ae523-e4d7-42e6-a59e-0bb627ba08db",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "__REDACTED__",
+          "name": "googleSheetsOAuth2Api (redacted)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        624,
+        224
+      ],
+      "id": "2e4e14e6-d9da-47ff-9648-4c23ac7f3f34",
+      "name": "Aggregate1"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        624,
+        592
+      ],
+      "id": "3134ec42-d6d4-4976-9b3f-34420dbf0335",
+      "name": "Aggregate2"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "claude-sonnet-4-5-20250929",
+          "mode": "list",
+          "cachedResultName": "Configured model"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=あなたは、シンプルな対立劇を、視聴者が白熱した議論を繰り広げたくなるような深みのある作品に昇華させる、超一流の「スクリプトドクター」です。あなたの役割は、提供された「原案シナリオ」を、コメント欄で賛否両論が巻き起こるような、絶妙なバランスの傑作に磨き上げることです。\n\n# 改善対象のシナリオ\n{{ $json.content.parts[0].text }}\n\n# あなたのタスク\n上記の「改善対象のシナリオ」を深く理解し、以下の指針に基づいて原案を全く新しい【完成版シナリオ】へと再構築してください。【1本だけ】出力してください。\n\n# 再構築の指針\n1.核の抽出と破壊: まず、原案の「面白いと感じる部分(核)」を一つだけ見つけ出してください。それ以外の部分は一度すべて捨て去るつもりで構いません。\n2.ヒット構造の注入: 次に、知識ベースの中から最も相性の良い「ヒットの構造」(例:「痛烈なカウンター」「知的などんでん返し」「感情のジェットコースター」「逆説的洞察」など)を一つ選び、抽出した「核」と強制的に融合させてください。\n3.パワーワードの創造: シナリオ全体を締めくくる、あるいは状況を180度ひっくり返すような、**記憶に残り、議論を呼び、真似したくなる「パワーワード」あるいは「キラーフレーズ」**を必ず一つ発明し、組み込んでください。\n4.引き算の徹底: 完成までの最終工程として、パワーワードを最も際立たせるために、不要なセリフや説明を極限まで削ぎ落としてください。\n【重要】 分析や解説は一切不要です。完成された最終シナリオのみを出力してください。\n\n# 制約条件\n1.テーマ: 合コンでの男女対立。「どっちもどっち」な状況を描くこと。(原案のテーマを引き継ぐ)\n2.文字数: 全文で200文字以内。\n3.【重要】出力形式: 以下の形式を一字一句違わず、厳密に守って出力してください。この形式以外のいかなるテキスト(例:「#生成シナリオ」、説明、分析など)も絶対に出力してはいけません。\n\n合コン\n(キャラクター名)「(セリフ)」\n(キャラクター名)「(セリフ)」\n(キャラクター名)「(セリフ)」\n(キャラクター名)「(セリフ)」\n(必要であれば、ト書きや絵文字も使用可)"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "3e4a4707-4940-4be2-b17e-93284f5a0714",
+      "name": "Claude 3",
+      "type": "@n8n/n8n-nodes-langchain.anthropic",
+      "typeVersion": 1,
+      "position": [
+        1280,
+        640
+      ],
+      "retryOnFail": true,
+      "maxTries": 5,
+      "credentials": {
+        "anthropicApi": {
+          "id": "__REDACTED__",
+          "name": "anthropicApi (redacted)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-3-flash-preview",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        784,
+        1328
+      ],
+      "id": "aaf1bc90-566a-4669-aeed-718e5c8fd7d8",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "__REDACTED__",
+          "name": "googlePalmApi (redacted)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "log"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.3,
+      "position": [
+        944,
+        1344
+      ],
+      "id": "6b3e9822-bc6f-49de-8c06-7bc3ac6b908f",
+      "name": "Postgres Chat Memory",
+      "credentials": {
+        "postgres": {
+          "id": "__REDACTED__",
+          "name": "postgres (redacted)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "__REDACTED_DOCUMENT_ID__",
+          "mode": "list",
+          "cachedResultName": "Redacted Google Sheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/__REDACTED__/edit"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "__REDACTED_SHEET_REF__",
+          "mode": "list",
+          "cachedResultName": "Redacted Sheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/__REDACTED__/edit#gid=__REDACTED__"
+        },
+        "options": {}
+      },
+      "id": "a1f94206-3788-4f4b-a38a-de2646b5fe7e",
+      "name": "2. Get Content Row1",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1792,
+        1568
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "__REDACTED__",
+          "name": "googleSheetsOAuth2Api (redacted)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "__REDACTED_DOCUMENT_ID__",
+          "mode": "list",
+          "cachedResultName": "Redacted Google Sheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/__REDACTED__/edit"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "__REDACTED_SHEET_REF__",
+          "mode": "list",
+          "cachedResultName": "Redacted Sheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/__REDACTED__/edit#gid=__REDACTED__"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        1104,
+        1344
+      ],
+      "id": "39b6a478-abed-4507-b587-4c48c64cf78a",
+      "name": "Get row(s) in sheet in Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "__REDACTED__",
+          "name": "googleSheetsOAuth2Api (redacted)"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "1. Get Counter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "1. Get Counter": {
+      "main": [
+        [
+          {
+            "node": "2. Get Content Row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "2. Get Content Row": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "3. Switch (A/B Test)": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get row(s) in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get row(s) in sheet2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "3. Switch (A/B Test)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "カウンターアップデート",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Claude ": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "次回のシナリオカウンター計算": {
+      "main": [
+        [
+          {
+            "node": "シナリオカウンターアップデート",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "カウンターアップデート": {
+      "main": [
+        [
+          {
+            "node": "次回のシナリオカウンター計算",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Gemini1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini3": {
+      "main": [
+        [
+          {
+            "node": "Claude 3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Claude 4": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Claude 5": {
+      "main": [
+        []
+      ]
+    },
+    "Gemini4": {
+      "main": [
+        [
+          {
+            "node": "Claude 4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini1": {
+      "main": [
+        [
+          {
+            "node": "Gemini2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini2": {
+      "main": [
+        [
+          {
+            "node": "Claude ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet1": {
+      "main": [
+        [
+          {
+            "node": "Aggregate1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet2": {
+      "main": [
+        [
+          {
+            "node": "Aggregate2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate1": {
+      "main": [
+        [
+          {
+            "node": "Gemini4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate2": {
+      "main": [
+        [
+          {
+            "node": "Gemini3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Claude 3": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Chat Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet in Google Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Asia/Tokyo",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "versionId": "a5619afe-168b-4747-ba09-325cdee5fde0",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "__REDACTED_INSTANCE_ID__"
+  },
+  "id": "y1QPSyviiJ6BBiv6",
+  "tags": []
+}

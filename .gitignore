@@ -1,1 +1,10 @@
+﻿node_modules/
 .vs/
+*.log
+.env
+.env.*
+*.local
+workflows/*.private.json
+workflows/*raw*.json
+exports/
+n8n-discord-anime-image-generator/

@@ -1,9 +1,10 @@
-{
-  "name": "snake-game",
+﻿{
+  "name": "social-post-automation-n8n",
   "version": "1.0.0",
   "private": true,
   "type": "module",
   "scripts": {
+    "sanitize:workflow": "node scripts/sanitize-n8n-workflow.mjs",
     "start": "node server.mjs",
     "test": "node tests/runTests.js"
   }
