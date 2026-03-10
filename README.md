@@ -1,93 +1,83 @@
 ﻿# Social Post Automation with n8n
 
-Public portfolio repository for an AI-assisted social content automation workflow built with `n8n`.
+n8nを基盤に、Google Sheets・Gemini・Claude・Threads API を連携させて構築した、AI活用型のSNS投稿自動化ワークフローの公開用リポジトリです。
 
-This project showcases how to design, sanitize, and publish a production-style workflow that:
+定期実行、投稿生成、分岐によるパターン出し、投稿履歴の参照、API投稿、カウンター更新までをひとつのフローとして設計しています。公開にあたっては、認証情報や各種IDをサニタイズし、安全に構成や設計意図を確認できる形に整えています。
 
-- schedules recurring social post generation for `Threads` and `X`
-- uses multiple LLM stages to generate, refine, and diversify short-form content
-- references spreadsheet-based content sources and posting history
-- applies branch-based content strategy for different engagement goals
-- publishes through API calls and updates workflow counters automatically
-- ships with a sanitized public export suitable for GitHub sharing
+## このリポジトリで伝わること
 
-## Why This Repository Exists
+- AIを組み込んだ業務自動化フローの設計力
+- 複数SaaS・APIをつないだワークフロー構築力
+- 生成結果のばらつきを制御するプロンプト設計力
+- 公開時のセキュリティとサニタイズを含めた運用視点
 
-It demonstrates practical engineering skills beyond toy code:
+## 主な特徴
 
-- workflow automation design
-- prompt architecture for multi-stage generation
-- operational thinking around scheduling, retries, and state tracking
-- secure open-source publication through credential and identifier sanitization
-- documentation for reproducibility and reviewability
+### 1. エンドツーエンドのワークフロー設計
+スケジュール実行、データ取得、投稿文生成、分岐処理、API投稿、カウンター更新までを `n8n` 上で一連の処理として構成しています。
 
-## Project Highlights
+### 2. 分岐による投稿パターン最適化
+毎回同じテイストの投稿にならないよう、複数の分岐を使って投稿の切り口や読後感を変えられる設計になっています。
 
-### 1. End-to-end workflow design
-The workflow coordinates scheduling, content retrieval, AI generation, post-processing, publishing, and counter updates inside one `n8n` flow.
+例:
 
-### 2. Multi-branch content strategy
-The automation uses branching to vary post style and engagement intent, rather than generating the same format every time.
+- コメントが付きやすい投稿
+- 共感されやすい投稿
+- シェアされやすい投稿
+- 保存されやすい投稿
 
-Example strategy directions:
+### 3. 複数AIノードの組み合わせ
+下書き生成と仕上げを分けることで、単発生成よりも投稿の安定感やバリエーションが出るようにしています。
 
-- comment-oriented posts
-- empathy-oriented posts
-- share-oriented posts
-- save-oriented posts
+### 4. 公開を前提にしたサニタイズ対応
+公開用エクスポートでは、トークン、credential ID、スプレッドシートID、URL、インスタンス識別子などをプレースホルダーに置き換えています。
 
-### 3. Multi-model orchestration
-The workflow combines multiple AI stages so that one model can generate raw ideas and another can refine tone, pacing, and hook quality.
-
-### 4. Security-conscious publication
-The public export was sanitized before publication. Sensitive values such as tokens, spreadsheet IDs, credential references, and instance identifiers are removed or replaced with placeholders.
-
-## Repository Structure
+## リポジトリ構成
 
 ```text
 workflows/
   threads-x-autopost-sanitized.json
+  README.md
 scripts/
   sanitize-n8n-workflow.mjs
-n8n-discord-anime-image-generator/
-  README.md
-  workflow.sanitized.json
 ```
 
-## Main Workflow
+## メインワークフロー
 
-File:
+対象ファイル:
 [`workflows/threads-x-autopost-sanitized.json`](workflows/threads-x-autopost-sanitized.json)
 
-What it contains:
+含まれている内容:
 
-- scheduled triggers for multiple posting times per day
-- Google Sheets reads for content source and workflow counters
-- branching logic for multiple content-generation patterns
-- LLM-based generation and refinement nodes
-- API publishing flow for Threads
-- write-back steps for operational bookkeeping
+- 1日複数回のスケジュール実行
+- Google Sheets を使った投稿元データ・履歴・カウンター管理
+- 分岐による複数の投稿戦略
+- LLMを使った原案生成と仕上げ
+- Threads API への投稿処理
+- 投稿後の状態更新
 
-## Sanitization Script
+## サニタイズスクリプト
 
-File:
+対象ファイル:
 [`scripts/sanitize-n8n-workflow.mjs`](scripts/sanitize-n8n-workflow.mjs)
 
-This script converts a private `n8n` export into a GitHub-safe public artifact by redacting:
+このスクリプトでは、privateな `n8n` エクスポートを GitHub 公開向けに変換できます。
 
-- access tokens
-- credential IDs and names
-- spreadsheet IDs and cached URLs
-- internal instance identifiers
-- account-specific naming where appropriate
+主な置換対象:
 
-### Run
+- アクセストークン
+- credential の ID / name
+- Google Sheets の documentId / gid / URL
+- インスタンス識別子
+- アカウント固有の名称
+
+### 実行例
 
 ```bash
 node scripts/sanitize-n8n-workflow.mjs <private-workflow.json> <public-output.json>
 ```
 
-## Technical Stack
+## 技術要素
 
 - `n8n`
 - `JavaScript / Node.js`
@@ -96,34 +86,23 @@ node scripts/sanitize-n8n-workflow.mjs <private-workflow.json> <public-output.js
 - `Google Gemini`
 - `Threads API`
 
-## Portfolio Value
+## 公開時の注意
 
-This repository emphasizes the kind of work often valued in product and automation roles:
+このリポジトリにはサニタイズ済みエクスポートのみを含めています。
+以下を含む raw export は公開しない前提です。
 
-- designing reliable internal tooling
-- connecting SaaS systems through automation
-- building AI-powered content pipelines
-- documenting real implementation tradeoffs
-- treating secret management as part of engineering quality
+- 実際の API トークン
+- 実際の credential 接続情報
+- 実際のスプレッドシートID
+- 内部メタデータ
 
-## Safe Publishing Notes
+## 今後の改善案
 
-This repository intentionally includes sanitized exports only.
-Do not commit raw workflow exports that contain:
-
-- real API tokens
-- real credential bindings
-- real spreadsheet IDs
-- internal instance metadata
-
-## Future Improvements
-
-- split generation prompts by engagement goal more explicitly
-- externalize prompts into versioned template files
-- add automated validation for placeholder leakage before commit
-- add snapshot tests for sanitization output
+- 投稿目的ごとにプロンプトをさらに分離する
+- プロンプトを個別ファイル化して管理しやすくする
+- サニタイズ漏れを検知するチェックを追加する
+- スクリプトのテストを追加する
 
 ## License
 
 This repository is shared for portfolio and educational purposes.
-
