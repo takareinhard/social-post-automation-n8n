@@ -1,0 +1,527 @@
+﻿{
+  "name": "WordPress記事リライト自動更新_安定版",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 3 * * *"
+            }
+          ]
+        }
+      },
+      "id": "1",
+      "name": "毎日3時に起動",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        260,
+        300
+      ],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://takareinhard.jp/wp-json/wp/v2/posts",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "orderby",
+              "value": "date"
+            },
+            {
+              "name": "order",
+              "value": "asc"
+            },
+            {
+              "name": "per_page",
+              "value": "1"
+            },
+            {
+              "name": "status",
+              "value": "publish"
+            },
+            {
+              "name": "offset",
+              "value": "={{ $getWorkflowStaticData('global').processed_count || 0 }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "2",
+      "name": "公開記事を1件取得",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        520,
+        300
+      ],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const response = $('公開記事を1件取得').first().json;\nconst post = Array.isArray(response) ? response[0] : response;\nconst currentYear = new Date().getFullYear();\nconst title = post?.title?.rendered ?? '';\nconst content = post?.content?.rendered ?? '';\nconst postId = post?.id ?? null;\n\nreturn [\n  {\n    json: {\n      postId,\n      hasPost: !!postId,\n      query: postId ? `${title} ${currentYear}` : '',\n      currentYear,\n      originalTitle: title,\n      originalContent: content\n    }\n  }\n];"
+      },
+      "id": "3",
+      "name": "記事データを整形",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        780,
+        300
+      ],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "post-exists",
+              "leftValue": "={{ String($('記事データを整形').first().json.hasPost) }}",
+              "rightValue": "true",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "4",
+      "name": "記事有無を判定",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1020,
+        300
+      ],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://api.search.brave.com/res/v1/web/search",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "q",
+              "value": "={{ $('記事データを整形').first().json.query }}"
+            },
+            {
+              "name": "count",
+              "value": "5"
+            },
+            {
+              "name": "search_lang",
+              "value": "jp"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Subscription-Token",
+              "value": "={{ $env.BRAVE_API_KEY }}"
+            },
+            {
+              "name": "Accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "5",
+      "name": "Brave検索で最新情報を取得",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1260,
+        220
+      ],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "={{ $env.ANTHROPIC_API_KEY }}"
+            },
+            {
+              "name": "anthropic-version",
+              "value": "2023-06-01"
+            },
+            {
+              "name": "content-type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({\n  model: 'claude-sonnet-4-5',\n  max_tokens: 4000,\n  messages: [\n    {\n      role: 'user',\n      content: '以下のWordPress記事を、読みやすく自然な日本語にリライトしてください。検索結果を参考に古い情報は最新化し、更新した箇所には必ず <!-- updated --> コメントを付与してください。見出し構成（h2/h3）はできるだけ維持し、HTML構造も保持してください。\\n\\n\\n' + $('記事データを整形').first().json.originalTitle + '\\n\\n\\n' + (($('Brave検索で最新情報を取得').first().json.web?.results || []).map(r => `${r.title}: ${r.description}`).join('\\n') || '検索結果なし') + '\\n\\n\\n' + $('記事データを整形').first().json.originalContent\n    }\n  ]\n}) }}"
+      },
+      "id": "6",
+      "name": "Claudeでリライト",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1500,
+        220
+      ],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const response = $('Claudeでリライト').first().json;\nconst rewrittenContent = response?.content?.[0]?.text ?? '';\n\nreturn [\n  {\n    json: {\n      rewrittenContent,\n      rewriteSucceeded: !!rewrittenContent\n    }\n  }\n];"
+      },
+      "id": "7",
+      "name": "リライト結果を整形",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1740,
+        220
+      ],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "rewrite-exists",
+              "leftValue": "={{ $('リライト結果を整形').first().json.rewrittenContent }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "8",
+      "name": "リライト成功を判定",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1980,
+        220
+      ],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ 'https://takareinhard.jp/wp-json/wp/v2/posts/' + $('記事データを整形').first().json.postId }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Basic {{$env.WP_BASIC_AUTH}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({\n  content: $('リライト結果を整形').first().json.rewrittenContent,\n  status: 'publish'\n}) }}",
+        "options": {}
+      },
+      "id": "9",
+      "name": "WordPressで記事を更新",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2220,
+        140
+      ],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const response = $('WordPressで記事を更新').first().json;\nconst updatedPostId = response?.id ?? null;\n\nreturn [\n  {\n    json: {\n      updatedPostId,\n      updateSucceeded: !!updatedPostId\n    }\n  }\n];"
+      },
+      "id": "10",
+      "name": "更新結果を整形",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2460,
+        140
+      ],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "update-success",
+              "leftValue": "={{ String($('更新結果を整形').first().json.updateSucceeded) }}",
+              "rightValue": "true",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "11",
+      "name": "更新成功を判定",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2700,
+        140
+      ],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const staticData = $getWorkflowStaticData('global');\nstaticData.processed_count = (staticData.processed_count || 0) + 1;\n\nreturn [\n  {\n    json: {\n      processed_count: staticData.processed_count,\n      updatedPostId: $('更新結果を整形').first().json.updatedPostId,\n      status: 'recorded'\n    }\n  }\n];"
+      },
+      "id": "12",
+      "name": "処理件数を記録",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2940,
+        140
+      ],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {},
+      "id": "13",
+      "name": "記事なしで終了",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1260,
+        420
+      ],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {},
+      "id": "14",
+      "name": "リライト失敗で終了",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        2220,
+        320
+      ],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {},
+      "id": "15",
+      "name": "更新失敗で終了",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        2940,
+        320
+      ],
+      "continueOnFail": true
+    }
+  ],
+  "connections": {
+    "毎日3時に起動": {
+      "main": [
+        [
+          {
+            "node": "公開記事を1件取得",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "公開記事を1件取得": {
+      "main": [
+        [
+          {
+            "node": "記事データを整形",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "記事データを整形": {
+      "main": [
+        [
+          {
+            "node": "記事有無を判定",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "記事有無を判定": {
+      "main": [
+        [
+          {
+            "node": "Brave検索で最新情報を取得",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "記事なしで終了",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Brave検索で最新情報を取得": {
+      "main": [
+        [
+          {
+            "node": "Claudeでリライト",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Claudeでリライト": {
+      "main": [
+        [
+          {
+            "node": "リライト結果を整形",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "リライト結果を整形": {
+      "main": [
+        [
+          {
+            "node": "リライト成功を判定",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "リライト成功を判定": {
+      "main": [
+        [
+          {
+            "node": "WordPressで記事を更新",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "リライト失敗で終了",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WordPressで記事を更新": {
+      "main": [
+        [
+          {
+            "node": "更新結果を整形",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "更新結果を整形": {
+      "main": [
+        [
+          {
+            "node": "更新成功を判定",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "更新成功を判定": {
+      "main": [
+        [
+          {
+            "node": "処理件数を記録",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "更新失敗で終了",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": false
+  }
+}
